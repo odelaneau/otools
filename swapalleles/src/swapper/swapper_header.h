@@ -37,7 +37,7 @@ public:
 
 	//PARAMETERS
 	void declare_options();
-	void parse_command_line(vector < string > &);
+	void parse_command_line(std::vector < std::string > &);
 	void check_options();
 	void verbose_options();
 	void verbose_files();
@@ -45,7 +45,7 @@ public:
 
 	//
 	void swap();
-	void swap(vector < string > & args);
+	void swap(std::vector < std::string > & args);
 };
 
 

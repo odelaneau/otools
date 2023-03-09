@@ -22,6 +22,8 @@
 
 #include <swapper/swapper_header.h>
 
+using namespace std;
+
 #define OFILE_VCFU	0
 #define OFILE_VCFC	1
 #define OFILE_BCFC	2

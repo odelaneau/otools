@@ -4,7 +4,7 @@ LABEL org.opencontainers.image.created="2022-03-16"
 LABEL org.opencontainers.image.url="https://github.com/odelaneau/shapeit5"
 LABEL org.opencontainers.image.version="1.0.0"
 LABEL org.opencontainers.image.licences="MIT"
-LABEL org.opencontainers.image.title="shapeit5"
+LABEL org.opencontainers.image.title="otools"
 LABEL org.opencontainers.image.authors="olivier.delaneau@unil.ch"
 
 # set the environment variables
@@ -39,13 +39,11 @@ RUN curl -SL https://github.com/samtools/bcftools/releases/download/${htslib_ver
     rm -rf bcftools-${htslib_version}.tar.bz2 && \
     rm -rf bcftools-${htslib_version}
 
-# get SHAPEIT5 [binary]
-ADD resources/SHAPEIT5_phase_common_static /bin/SHAPEIT5_phase_common_static
-ADD resources/SHAPEIT5_phase_rare_static /bin/SHAPEIT5_phase_rare_static
-ADD resources/SHAPEIT5_switch_static /bin/SHAPEIT5_switch_static
-ADD resources/SHAPEIT5_ligate_static /bin/SHAPEIT5_ligate_static
-ADD resources/SHAPEIT5_scftools_static /bin/SHAPEIT5_scftools_static
+# get OTOOLS [binary]
+ADD resources/OTOOLS_liftover_static /bin/OTOOLS_liftover_static
+ADD resources/OTOOLS_swapalleles_static /bin/OTOOLS_swapalleles_static
+ADD resources/OTOOLS_mendel_static /bin/OTOOLS_mendel_static
 
-RUN chmod +x /bin/SHAPEIT5*
+RUN chmod +x /bin/OTOOLS*
 
 WORKDIR $HOME

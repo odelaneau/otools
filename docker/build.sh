@@ -1,44 +1,31 @@
 #Clean up
-rm ../static_bins/SHAPEIT5_*
-rm resources/SHAPEIT5_*
+rm ../static_bins/OTOOLS_*
+rm resources/OTOOLS_*
 
-
-#Compile phase 1
-cd ../phase_common/
+#Compile mendel
+cd ../mendel/
 make clean
 make -j static_exe
-cp bin/SHAPEIT5_phase_common_static ../static_bins/.
+cp bin/OTOOLS_mendel_static ../static_bins/.
 
-#Compile phase 2
-cd ../phase_rare/
+#Compile swapalleles
+cd ../swapalleles/
 make clean
 make -j static_exe
-cp bin/SHAPEIT5_phase_rare_static ../static_bins/.
+cp bin/OTOOLS_swapalleles_static ../static_bins/.
 
-#Compile switch
-cd ../switch/
+#Compile liftover
+cd ../liftover/
 make clean
 make -j static_exe
-cp bin/SHAPEIT5_switch_static ../static_bins/.
-
-#Compile ligate
-cd ../ligate/
-make clean
-make -j static_exe
-cp bin/SHAPEIT5_ligate_static ../static_bins/.
-
-#Compile scftools
-cd ../scftools/
-make clean
-make -j static_exe
-cp bin/SHAPEIT5_scftools_static ../static_bins/.
+cp bin/OTOOLS_liftover_static ../static_bins/.
 
 #Buld docker image
-LAB=shapeit5_$(git log -1 --format=%cd --date=short)\_$(git rev-parse --short HEAD)
+LAB=otools_$(git log -1 --format=%cd --date=short)\_$(git rev-parse --short HEAD)
 
 cd ../docker/
 mkdir -p resources
-cp ../static_bins/SHAPEIT5* resources/.
+cp ../static_bins/OTOOLS* resources/.
 
 docker build -t $LAB -f Dockerfile .
 docker save $LAB | gzip -c > $LAB\.tar.gz
