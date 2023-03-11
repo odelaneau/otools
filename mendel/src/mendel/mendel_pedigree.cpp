@@ -44,23 +44,31 @@ void mendel::readPedigree(string fped) {
 void mendel::checkMendel(int * genotypes, float & maf, int & m_errors, int & m_totals) {
 
 	//Get Major
-	unsigned int nAC = 0;
-	for (int kidx = 0 ; kidx < samples.size() ; kidx++) if (genotypes[2*kidx+0] != bcf_gt_missing && genotypes[2*kidx+1] != bcf_gt_missing) nAC += (bcf_gt_allele(genotypes[2*kidx+0])==1) + (bcf_gt_allele(genotypes[2*kidx+1])==1);
-	maf = nAC * 1.0f / (2 * samples.size());
+	unsigned int nAC = 0, nAN = 0;
+	for (int kidx = 0 ; kidx < samples.size() ; kidx++) {
+		if (genotypes[2*kidx+0] != bcf_gt_missing && genotypes[2*kidx+1] != bcf_gt_missing) {
+			nAC += (bcf_gt_allele(genotypes[2*kidx+0])==1) + (bcf_gt_allele(genotypes[2*kidx+1])==1);
+			nAN += 2;
+		}
+	}
+	maf = nAC * 1.0f / nAN;
 	bool major = (maf > 0.5f);
 
 	//Check Mendel
 	m_errors = m_totals = 0;
 	for (int kidx = 0 ; kidx < samples.size() ; kidx++) {
 
-		int kg = (bcf_gt_allele(genotypes[2*kidx+0])==1) + (bcf_gt_allele(genotypes[2*kidx+1])==1);
-		kg = (genotypes[2*kidx+0] == bcf_gt_missing || genotypes[2*kidx+1] == bcf_gt_missing)?-1:kg;
+		int kg = -1;
+		if (genotypes[2*kidx+0] != bcf_gt_missing && genotypes[2*kidx+1] != bcf_gt_missing)
+			kg = (bcf_gt_allele(genotypes[2*kidx+0])==1) + (bcf_gt_allele(genotypes[2*kidx+1])==1);
 
-		int fg = (fathers_idx[kidx]>=0)?((bcf_gt_allele(genotypes[2*fathers_idx[kidx]+0])==1) + (bcf_gt_allele(genotypes[2*fathers_idx[kidx]+1])==1)):-1;
-		fg = (fathers_idx[kidx]>=0 && (genotypes[2*fathers_idx[kidx]+0] == bcf_gt_missing || genotypes[2*fathers_idx[kidx]+1] == bcf_gt_missing))?-1:fg;
+		int fg = -1;
+		if ((fathers_idx[kidx]>=0) && (genotypes[2*fathers_idx[kidx]+0] != bcf_gt_missing) && (genotypes[2*fathers_idx[kidx]+1] != bcf_gt_missing))
+			fg = (bcf_gt_allele(genotypes[2*fathers_idx[kidx]+0])==1) + (bcf_gt_allele(genotypes[2*fathers_idx[kidx]+1])==1);
 
-		int mg = (mothers_idx[kidx]>=0)?((bcf_gt_allele(genotypes[2*mothers_idx[kidx]+0])==1) + (bcf_gt_allele(genotypes[2*mothers_idx[kidx]+1])==1)):-1;
-		mg = (mothers_idx[kidx]>=0 && (genotypes[2*mothers_idx[kidx]+0] == bcf_gt_missing || genotypes[2*mothers_idx[kidx]+1] == bcf_gt_missing))?-1:mg;
+		int mg = -1;
+		if ((mothers_idx[kidx]>=0) && (genotypes[2*mothers_idx[kidx]+0] != bcf_gt_missing) && (genotypes[2*mothers_idx[kidx]+1] != bcf_gt_missing))
+			mg = (bcf_gt_allele(genotypes[2*mothers_idx[kidx]+0])==1) + (bcf_gt_allele(genotypes[2*mothers_idx[kidx]+1])==1) ;
 
 		int error = 0;
 		if (kg>=0 && fg>=0 && mg>=0) {
@@ -88,13 +96,23 @@ void mendel::checkMendel(int * genotypes, float & maf, int & m_errors, int & m_t
 
 		int total = 0;
 		if (kg>=0 && fg>=0 && mg>=0) {
-			total = (!major && kg!=0 && fg!=0 && mg!=0) || (major && kg!=2 && fg!=2 && mg!=2);
+			//total = (!major && kg!=0 && fg!=0 && mg!=0) || (major && kg!=2 && fg!=2 && mg!=2);
+			if (major) total = (kg!=2) || (fg!=2) || (mg!=2);
+			else total = (kg!=0) || (fg!=0) || (mg!=0);
 		}
 		if (kg>=0 && fg>=0 && mg<0) {
-			total = (!major && kg!=0 && fg!=0) || (major && kg!=2 && fg!=2);
+			//total = (!major && kg!=0 && fg!=0) || (major && kg!=2 && fg!=2);
+			if (major) total = (kg!=2) || (fg!=2);
+			else total = (kg!=0) || (fg!=0);
 		}
 		if (kg>=0 && fg<0 && mg>=0) {
-			total = (!major && kg!=0 && mg!=0) || (major && kg!=2 && mg!=2);
+			//total = (!major && kg!=0 && mg!=0) || (major && kg!=2 && mg!=2);
+			if (major) total = (kg!=2) || (mg!=2);
+			else total = (kg!=0) || (mg!=0);
+		}
+
+		if (error > total) {
+			cout << endl << "DIOGO's VERBOSE kidx=" << kidx << " af=" << maf << " nAC=" << nAC << " nAN=" << nAN << " major=" << major << " kg=" << kg << " fg=" << fg << " mg=" << mg << " error=" << error << " total=" << total << endl;
 		}
 
 		mendel_errors[kidx] += error;
