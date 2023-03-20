@@ -85,8 +85,14 @@ void swapper::swap() {
 				if (gt_arr[2*i+0] != bcf_gt_missing && gt_arr[2*i+1] != bcf_gt_missing) {
 					bool a0 = (bcf_gt_allele(gt_arr[2*i+0])==1);
 					bool a1 = (bcf_gt_allele(gt_arr[2*i+1])==1);
-					gt_arr[2*i+0] = bcf_gt_unphased(1-a0);
-					gt_arr[2*i+1] = bcf_gt_unphased(1-a1);
+					bool phased = (bcf_gt_is_phased(gt_arr[2*i+0]) || bcf_gt_is_phased(gt_arr[2*i+1]));
+					if (phased) {
+						gt_arr[2*i+0] = bcf_gt_phased(1-a0);
+						gt_arr[2*i+1] = bcf_gt_phased(1-a1);
+					} else {
+						gt_arr[2*i+0] = bcf_gt_unphased(1-a0);
+						gt_arr[2*i+1] = bcf_gt_unphased(1-a1);
+					}
 				}
 			}
 
