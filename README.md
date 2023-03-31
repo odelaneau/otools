@@ -1,19 +1,19 @@
-# Olivier's tools
+# makeScaffold
+Build a haplotype scaffold for a VCF/BCF from a PED file
 
-OTOOLS is a collection of utility tools for VCF/BCF files
+Usage:
 
-- **docker**: all script needed to build a docker file comprising all binaries
-- **swapalleles**: swap all REF/ALT alleles in a VCF
-- **liftover**: simple liftover tools for VCF files
-- **mendel**: computes mendel errors per sample and per variant
+makeScaffold --vcf myGenotypes.vcf.gz --fam myPedigreees.txt --reg chr1 --myScaffoldedGenotypes.vcf.gz
 
-## Citation
-If you use OTOOLS, offer me a beer
+makeScaffold --vcf myGenotypes.vcf.gz --fam myPedigreees.txt --reg chr22:10000000-20000000 --myScaffoldedGenotypes.bcf
 
-## Documentation
 
-OTOOLS_xxx_static --help
+cat myPedigreees.txt
 
-## License
+child1 father1 mother1
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+child2 father2 mother2
+
+child3 father3 mother3
+
+child4 father4 mother4
