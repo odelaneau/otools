@@ -1,19 +1,33 @@
-# makeScaffold
-Build a haplotype scaffold for a VCF/BCF from a PED file
+# Collection of utility tools for VCF/BCF
 
-Usage:
+- **docker**: all script needed to build a docker file comprising all binaries
+- **fillfreqs**: populate vcf with AC/AN
+- **liftover**: liftover a vcf in a memory less fashion
+- **mendel**: computes mendel inconsistencies
+- **pedphasing**: phase vcf using a pedigrees
+- **swapalleles**: swap all alleles
 
-makeScaffold --vcf myGenotypes.vcf.gz --fam myPedigreees.txt --reg chr1 --myScaffoldedGenotypes.vcf.gz
+## fillfreqs
 
-makeScaffold --vcf myGenotypes.vcf.gz --fam myPedigreees.txt --reg chr22:10000000-20000000 --myScaffoldedGenotypes.bcf
+Example:
+
+## liftover
+
+Example:
+
+## mendel
+
+Example:
+
+## pedphasing
+
+Example:
+
+## swapalleles
+
+Example:
 
 
-cat myPedigreees.txt
+## License
 
-child1 father1 mother1
-
-child2 father2 mother2
-
-child3 father3 mother3
-
-child4 father4 mother4
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
